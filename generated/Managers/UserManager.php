@@ -144,6 +144,7 @@ class UserManager
 	 * @param string $name
 	 * @param string $email Format: email.
 	 * @param string $password Format: password.
+	 * @param boolean $double_optin
 	 * @param string $emonsite_user_id
 	 * @param string $preferred_language
 	 * 
@@ -151,7 +152,7 @@ class UserManager
 	 * 
 	 * @throws UnexpectedResponseException
 	 */
-	public function create($user_group_id, $name, $email, $password, $emonsite_user_id = null, $preferred_language = null)
+	public function create($user_group_id, $name, $email, $password, $double_optin, $emonsite_user_id = null, $preferred_language = null)
 	{
 		$routeUrl = '/api/user';
 
@@ -160,6 +161,7 @@ class UserManager
 		$bodyParameters['name'] = $name;
 		$bodyParameters['email'] = $email;
 		$bodyParameters['password'] = $password;
+		$bodyParameters['double_optin'] = $double_optin;
 
 		if (!is_null($emonsite_user_id)) {
 			$bodyParameters['emonsite_user_id'] = $emonsite_user_id;

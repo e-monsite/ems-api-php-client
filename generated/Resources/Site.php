@@ -2627,6 +2627,160 @@ class Site
 	}
 	
 	/**
+	 * Update a specified module Album image item
+	 * 
+	 * Excepted HTTP code : 200
+	 * 
+	 * @param string $imageId Image ID
+	 * @param boolean $published
+	 * @param boolean $cover
+	 * @param string $parent_id
+	 * @param int $publish_from
+	 * @param boolean $trash
+	 * @param int $trash_dt
+	 * @param string $trash_user_id
+	 * 
+	 * @return ImageResponse
+	 * 
+	 * @throws UnexpectedResponseException
+	 */
+	public function updateImage($imageId, $published, $cover, $parent_id = null, $publish_from = null, $trash = null, $trash_dt = null, $trash_user_id = null)
+	{
+		$routePath = '/api/site/{siteId}/module/album/model/image/{imageId}';
+
+		$pathReplacements = [
+			'{siteId}' => $this->id,
+			'{imageId}' => $imageId,
+		];
+
+		$routeUrl = str_replace(array_keys($pathReplacements), array_values($pathReplacements), $routePath);
+
+		$bodyParameters = [];
+		$bodyParameters['published'] = $published;
+		$bodyParameters['cover'] = $cover;
+
+		if (!is_null($parent_id)) {
+			$bodyParameters['parent_id'] = $parent_id;
+		}
+
+		if (!is_null($publish_from)) {
+			$bodyParameters['publish_from'] = $publish_from;
+		}
+
+		if (!is_null($trash)) {
+			$bodyParameters['trash'] = $trash;
+		}
+
+		if (!is_null($trash_dt)) {
+			$bodyParameters['trash_dt'] = $trash_dt;
+		}
+
+		if (!is_null($trash_user_id)) {
+			$bodyParameters['trash_user_id'] = $trash_user_id;
+		}
+
+		$requestOptions = [];
+		$requestOptions['form_params'] = $bodyParameters;
+
+		$request = $this->apiClient->getHttpClient()->request('patch', $routeUrl, $requestOptions);
+
+		if ($request->getStatusCode() != 200) {
+			$requestBody = json_decode((string) $request->getBody(), true);
+
+			$apiExceptionResponse = new ErrorResponse(
+				$this->apiClient, 
+				$requestBody['message'], 
+				(isset($requestBody['errors']) ? $requestBody['errors'] : null), 
+				(isset($requestBody['status_code']) ? $requestBody['status_code'] : null), 
+				(isset($requestBody['debug']) ? $requestBody['debug'] : null)
+			);
+
+			throw new UnexpectedResponseException($request->getStatusCode(), 200, $request, $apiExceptionResponse);
+		}
+
+		$requestBody = json_decode((string) $request->getBody(), true);
+
+		$response = new ImageResponse(
+			$this->apiClient, 
+			new Image(
+				$this->apiClient, 
+				$requestBody['data']['id'], 
+				$requestBody['data']['site_id'], 
+				$requestBody['data']['parent_id'], 
+				$requestBody['data']['published'], 
+				$requestBody['data']['publish_from'], 
+				$requestBody['data']['storageserver_id'], 
+				$requestBody['data']['privatefilepath'], 
+				$requestBody['data']['privatefilename'], 
+				$requestBody['data']['publicfilepath'], 
+				$requestBody['data']['publicfilename'], 
+				$requestBody['data']['filesize'], 
+				$requestBody['data']['mime'], 
+				$requestBody['data']['transaction_id'], 
+				$requestBody['data']['cover'], 
+				$requestBody['data']['emstorage_id'], 
+				$requestBody['data']['trash'], 
+				$requestBody['data']['trash_dt'], 
+				$requestBody['data']['trash_user_id'], 
+				$requestBody['data']['add_dt'], 
+				$requestBody['data']['add_user_id'], 
+				$requestBody['data']['upd_dt'], 
+				$requestBody['data']['upd_user_id'], 
+				((isset($requestBody['data']['mainItemHasCategory']) && !is_null($requestBody['data']['mainItemHasCategory'])) ? (new ItemHasCategoryResponse(
+					$this->apiClient, 
+					new ItemHasCategory(
+						$this->apiClient, 
+						$requestBody['data']['mainItemHasCategory']['data']['id'], 
+						$requestBody['data']['mainItemHasCategory']['data']['site_id'], 
+						$requestBody['data']['mainItemHasCategory']['data']['model_id'], 
+						$requestBody['data']['mainItemHasCategory']['data']['item_id'], 
+						$requestBody['data']['mainItemHasCategory']['data']['parent_id'], 
+						$requestBody['data']['mainItemHasCategory']['data']['ordering'], 
+						$requestBody['data']['mainItemHasCategory']['data']['add_dt'], 
+						$requestBody['data']['mainItemHasCategory']['data']['add_user_id'], 
+						$requestBody['data']['mainItemHasCategory']['data']['upd_dt'], 
+						$requestBody['data']['mainItemHasCategory']['data']['upd_user_id']
+					)
+				)) : null), 
+				((isset($requestBody['data']['aliasItemHasCategories']) && !is_null($requestBody['data']['aliasItemHasCategories'])) ? (new ItemHasCategoryListResponse(
+					$this->apiClient, 
+					array_map(function($data) {
+						return new ItemHasCategory(
+							$this->apiClient, 
+							$data['id'], 
+							$data['site_id'], 
+							$data['model_id'], 
+							$data['item_id'], 
+							$data['parent_id'], 
+							$data['ordering'], 
+							$data['add_dt'], 
+							$data['add_user_id'], 
+							$data['upd_dt'], 
+							$data['upd_user_id']
+						); 
+					}, $requestBody['data']['aliasItemHasCategories']['data']), 
+					new Meta(
+						$this->apiClient, 
+						((isset($requestBody['data']['aliasItemHasCategories']['meta']['pagination']) && !is_null($requestBody['data']['aliasItemHasCategories']['meta']['pagination'])) ? (new Pagination(
+							$this->apiClient, 
+							$requestBody['data']['aliasItemHasCategories']['meta']['pagination']['total'], 
+							$requestBody['data']['aliasItemHasCategories']['meta']['pagination']['count'], 
+							$requestBody['data']['aliasItemHasCategories']['meta']['pagination']['per_page'], 
+							$requestBody['data']['aliasItemHasCategories']['meta']['pagination']['current_page'], 
+							$requestBody['data']['aliasItemHasCategories']['meta']['pagination']['total_pages'], 
+							$requestBody['data']['aliasItemHasCategories']['meta']['pagination']['links']
+						)) : null)
+					)
+				)) : null), 
+				$requestBody['data']['item_url'], 
+				$requestBody['data']['image_url']
+			)
+		);
+
+		return $response;
+	}
+	
+	/**
 	 * Site module Album image category list
 	 * 
 	 * You can specify a GET parameter `root`

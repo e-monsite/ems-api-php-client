@@ -466,7 +466,8 @@
                                     "user_group_id",
                                     "name",
                                     "email",
-                                    "password"
+                                    "password",
+                                    "double_optin"
                                 ],
                                 "properties": {
                                     "emonsite_user_id": {
@@ -496,6 +497,9 @@
                                     "preferred_language": {
                                         "maxLength": 30,
                                         "type": "string"
+                                    },
+                                    "double_optin": {
+                                        "type": "boolean"
                                     }
                                 }
                             }
@@ -4302,10 +4306,10 @@
             },
             "put": {
                 "tags": [
-                    "Resource:Image"
+                    "Resource:Site"
                 ],
                 "summary": "Update a specified module Album image item",
-                "operationId": "update",
+                "operationId": "updateImage",
                 "parameters": [
                     {
                         "name": "siteId",
@@ -4388,10 +4392,10 @@
             },
             "patch": {
                 "tags": [
-                    "Resource:Image"
+                    "Resource:Site"
                 ],
                 "summary": "Update a specified module Album image item",
-                "operationId": "update",
+                "operationId": "updateImage",
                 "parameters": [
                     {
                         "name": "siteId",
@@ -4704,6 +4708,7 @@
             },
             "put": {
                 "tags": [
+                    "Resource:Image",
                     "Resource:ImageVersion"
                 ],
                 "summary": "Update a specified module Album image item version",
@@ -4816,6 +4821,7 @@
             },
             "patch": {
                 "tags": [
+                    "Resource:Image",
                     "Resource:ImageVersion"
                 ],
                 "summary": "Update a specified module Album image item version",
@@ -7843,6 +7849,27 @@
                 "value": {
                     "data": [
                         {
+                            "id": "53df3f23-9674-4d9b-92bd-ed2308df2780",
+                            "type": "App\\Notifications\\UserCreatedNotification",
+                            "notifiable_id": "41abdec2-1389-11e7-93ae-92361f002671",
+                            "notifiable_type": "App\\Models\\User",
+                            "data": {
+                                "user_id": "4ca4a3f8-c7b3-4d53-9aa5-d570bfdea7b6",
+                                "user": {
+                                    "name": "Ryan Gilles",
+                                    "email": "ryan@e-monsite.com",
+                                    "created_at": {
+                                        "date": "2018-10-16 10:37:01.000000",
+                                        "timezone_type": 3,
+                                        "timezone": "UTC"
+                                    }
+                                }
+                            },
+                            "read_at": null,
+                            "created_at": "2018-10-16 10:37:01",
+                            "updated_at": "2018-10-16 10:37:01"
+                        },
+                        {
                             "id": "27ac8aff-6986-4ddc-a36a-236856c5b820",
                             "type": "App\\Notifications\\UserCreatedNotification",
                             "notifiable_id": "41abdec2-1389-11e7-93ae-92361f002671",
@@ -7929,8 +7956,8 @@
                     ],
                     "meta": {
                         "pagination": {
-                            "total": 4,
-                            "count": 4,
+                            "total": 5,
+                            "count": 5,
                             "per_page": 10,
                             "current_page": 1,
                             "total_pages": 1,
@@ -8007,7 +8034,7 @@
                         },
                         {
                             "id": "End-User",
-                            "users_count": 2
+                            "users_count": 3
                         },
                         {
                             "id": "Support",
@@ -8057,6 +8084,16 @@
                             }
                         },
                         {
+                            "id": "4ca4a3f8-c7b3-4d53-9aa5-d570bfdea7b6",
+                            "emonsite_user_id": null,
+                            "user_group_id": "End-User",
+                            "name": "Ryan Gilles",
+                            "email": "ryan@e-monsite.com",
+                            "preferred_language": "fr",
+                            "created_at": "2018-10-16 10:37:01",
+                            "updated_at": "2018-10-16 10:37:01"
+                        },
+                        {
                             "id": "509dd5c0-1389-11e7-93ae-92361f002671",
                             "emonsite_user_id": null,
                             "user_group_id": "Support",
@@ -8089,8 +8126,8 @@
                     ],
                     "meta": {
                         "pagination": {
-                            "total": 4,
-                            "count": 4,
+                            "total": 5,
+                            "count": 5,
                             "per_page": 10,
                             "current_page": 1,
                             "total_pages": 1,
